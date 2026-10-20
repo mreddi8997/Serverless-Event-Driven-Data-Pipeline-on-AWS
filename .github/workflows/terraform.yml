@@ -1,0 +1,104 @@
+name: 'Deploy serverless lambda'
+
+on: 
+ push:
+   branches: [main]
+ workflow_dispatch:   
+ 
+permissions:
+  contents: read
+  id-token: write
+
+
+env:
+  TF_version: "1.10.0"
+
+jobs:
+  setup:
+    name: 'terrafrom conf'
+    runs-on: ubuntu-latest
+    environment: production
+  
+    defaults:
+      run:
+        shell: bash
+
+
+          
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{vars.AWS_ROLE_ARN}}
+        aws-region: ${{vars.AWS_REGION}}
+
+    - name:  check the identity
+      run: aws sts get-caller-identity
+
+    - name: Package Lambda functions
+      working-directory: Infra
+      run: |
+        zip -j s3_lambda.zip s3_lambda.py
+        zip -j query_lambda.zip query_lambda.py
+      
+# Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{env.TF_version}}
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: Terraform Format
+      run: terraform fmt -check -recursive    
+    
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - uses: terraform-linters/setup-tflint@v4
+      with:
+        tflint_version: "v0.52.0"
+
+    - name: Initialize lint plugins
+      run: tflint --init
+
+    - name: Run lint checks
+      run: tflint --recursive --format compact
+
+    - name: terrafrom plan
+      run: terrafrom plan 
+
+    - name: terraform apply
+      run: terrafrom apply -auto-approve
+
+
+
+
+
+
+
+
+
+
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan -input=false out=tfplan
+
+
+
+
+
+
+
+      
+
+
