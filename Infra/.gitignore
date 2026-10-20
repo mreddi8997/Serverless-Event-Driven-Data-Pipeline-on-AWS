@@ -1,9 +1,9 @@
 
-.terrafrom/.
+.terraform/
 *.tfstate
 *.tfstate.*
 *.tfplan
 tfplan
 crash.log
 *.pyc
-_pycache_/
+__pycache__/
