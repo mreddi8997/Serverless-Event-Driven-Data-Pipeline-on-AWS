@@ -43,6 +43,22 @@ S3 invokes Lambda directly;The SQS queue is the failure destination, rather than
 - **Persistent state:** an encrypted S3 backend uses native S3 state locking.
 - **Resource adoption:** existing data resources are imported and protected with `prevent_destroy`.
 
+### Successful deployment
+![Successful GitHub Actions deployment](docs/screenshots/pipeline-success.png)
+
+### DynamoDB records
+![Requests stored in DynamoDB](docs/screenshots/dynamodb-records.png)
+
+### API query
+![Successful API query in Postman](docs/screenshots/api-query-success.png)
+
+### Failed event captured
+![Failed event in SQS DLQ](docs/screenshots/dlq-failed-event.png)
+
+### Failure notification
+![SNS failure notification email](docs/screenshots/sns-failure-email.jpg)
+
+
 ## Technology
 
 | Area | Implementation |
