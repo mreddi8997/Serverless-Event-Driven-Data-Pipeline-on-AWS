@@ -29,7 +29,7 @@ flowchart TD
     TF -.-> API
 ```
 
-S3 invokes Lambda directly; EventBridge is not part of this implementation. The SQS queue is the failure destination, rather than a queue in front of the processing function.
+S3 invokes Lambda directly;The SQS queue is the failure destination, rather than a queue in front of the processing function.
 
 ## Implementation highlights
 
