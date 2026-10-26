@@ -7,10 +7,6 @@ import {
 
 resource "aws_s3_bucket" "test_bucket" {
   bucket = "this-is-a-test-bucket-1234567890"
-  lifecycle {
-    prevent_destroy = true
-  }
-
 }
 
 import {
@@ -30,7 +26,4 @@ resource "aws_dynamodb_table" "table_db" {
     type = "S"
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
 }
