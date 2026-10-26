@@ -1,3 +1,6 @@
+data "aws_s3_bucket" "test_bucket" {
+  bucket = "this-is-a-test-bucket-1234567890"
+}
 removed {
   from = aws_s3_bucket.test_bucket
 
